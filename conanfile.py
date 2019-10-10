@@ -22,15 +22,13 @@ class SpeexdspConan(ConanFile):
     exports_sources = "cmake-build-src/*"
 
     def source(self):
-        git = tools.Git('speexdsp')
-        git.clone('https://github.com/xiph/speexdsp.git')
-        git.checkout('SpeexDSP-1.2.0')
-        shutil.copy("cmake-build-src/CMakeLists.txt", "speexdsp/")
+        tools.get('http://downloads.us.xiph.org/releases/speex/speexdsp-%s.tar.gz'%self.version)
+        shutil.copy("cmake-build-src/CMakeLists.txt", "speexdsp-%s/"%self.version)
 
 
     def _configure_cmake(self):
         cmake = CMake(self, parallel=False)
-        cmake.configure(source_folder="speexdsp")
+        cmake.configure(source_folder="speexdsp-%s"%self.version)
         return cmake
 
     def build(self):
@@ -38,13 +36,13 @@ class SpeexdspConan(ConanFile):
             cmake = self._configure_cmake()
             cmake.build()
         else:
-            autotools = AutoToosBuildEnvironment(self)
+            autotools = AutoToolsBuildEnvironment(self)
             autotools.fpic = self.options.fPIC
-            autotools.configure()
+            autotools.configure(configure_dir='speexdsp-%s'%self.version, args=['--with-fft=smallft'])
             autotools.make()
 
     def package(self):
-        self.copy("*.h", dst="include", src="speexdsp/include")
+        self.copy("*.h", dst="include", src="speexdsp-%s/include"%self.version)
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.exp", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
