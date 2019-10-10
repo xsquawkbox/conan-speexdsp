@@ -43,6 +43,7 @@ class SpeexdspConan(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include", src="speexdsp-%s/include"%self.version)
+        self.copy("speexdsp_config_types.h", dst="include/speex", src="include/speex", keep_path=False)
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.exp", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
