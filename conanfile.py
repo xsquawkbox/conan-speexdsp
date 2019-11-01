@@ -38,7 +38,13 @@ class SpeexdspConan(ConanFile):
         else:
             autotools = AutoToolsBuildEnvironment(self)
             autotools.fpic = self.options.fPIC
-            autotools.configure(configure_dir='speexdsp-%s'%self.version, args=['--with-fft=smallft'])
+            config_args=['--with-fft=smallft']
+            if self.options.shared:
+                config_args+=['--enable-shared=true', '--enable-static=false']
+            else:
+                config_args+=['--enable-shared=false', '--enable-static=true']
+
+            autotools.configure(configure_dir='speexdsp-%s'%self.version, args=config_args)
             autotools.make()
 
     def package(self):
