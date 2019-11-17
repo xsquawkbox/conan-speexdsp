@@ -1,5 +1,8 @@
 PROJECT(speexdsp LANGUAGES C)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 set(FFT_SOURCES
     libspeexdsp/smallft.c)
 
