@@ -32,7 +32,7 @@ class SpeexdspConan(ConanFile):
         return cmake
 
     def build(self):
-        if self.settings.os == 'Windows':
+        if self.settings.os == 'Windows' or self.settings.os == 'Macos':
             cmake = self._configure_cmake()
             cmake.build()
         else:
